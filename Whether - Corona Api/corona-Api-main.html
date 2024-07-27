@@ -1,0 +1,96 @@
+<!-- Shree Ganeshay namah  -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Corona Api</title>
+  </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <body>
+    <div class="mt-5 mb-4 col-4 mx-auto">
+
+        <input type="text" class="form-control my-4" placeholder="Enter Your Distric Location" id="name"/>
+        
+        <button class="btn btn-outline-danger" onclick="Add()">Click me</button>
+        
+    </div>
+    <div class="container col-4 mx-auto">
+
+    </div>
+    <script>
+
+let person = {
+    name: "Rahul",
+    age: 25,
+    city: {
+        area : 'Ahmedabd',
+        local : true
+    }
+};
+
+let entries = Object.entries(person);  // aa aakha object ne array ma ane temni key and value ne object ma convert karti
+console.log(entries);
+console.log(entries[2])
+console.log(entries[2][1].area)
+
+        function Add(){
+
+            async function Api() {
+                let show = document.querySelector('.container')
+                let input = document.querySelector("#name");
+                
+                let data = await fetch(
+                    "https://data.covid19india.org/v4/min/data.min.json"
+                );
+                console.log(data);
+                let res = await data.json();
+                console.log(res);
+                console.log(res.GJ.districts);
+                
+                let distric_data = res.GJ.districts;
+                console.log(distric_data);
+                
+                let districtArray = Object.entries(distric_data);
+                console.log(districtArray);
+                
+                let districtName = "Ahmedabad";
+                // let foundDistrict = districtArray.find(([key, value]) => key === districtName);
+                // let foundDistrict = districtArray.forEach(([key,value])=>{
+                    //     console.table(key,value)
+                    // })
+                    
+                    try {
+                        let foundDistrict = districtArray.find(([key, value]) => {
+                            return key === input.value;
+                        });
+                        // console.log(foundDistrict[1].total.confirmed);
+                        console.log(foundDistrict[1].total.deceased)    
+                        console.log(foundDistrict[1].total.recovered)
+                        show.innerHTML = `Total Cases in ${input.value} ${foundDistrict[1].total.confirmed} <br>
+                         And Total Dies : ${foundDistrict[1].total.deceased}
+                        <br> And Total Recovers:  ${foundDistrict[1].total.recovered}`
+                    } catch (error) {
+                        show.innerHTML = error
+                    }
+                    
+                    // console.log(foundDistrict)
+                    // let final = districtArray.find(ele=>{
+                        //     return ele == Ahmedabad
+                        // })
+                        
+                        // console.log(final)
+                        
+                        // console.log(Array.isArray(distric_data));
+                        
+                        // let a = [10,20,30,40]
+                        // let b = a.find(ele=>{
+                            //     return ele > 25
+                            // })
+                            // console.log(b)
+                        }
+                        Api();
+                    }
+    </script>
+  </body>
+</html>
